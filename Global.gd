@@ -1,13 +1,16 @@
 extends Node2D
 
-var FOOD = preload("res://Game/Food.tscn")
 var RNG = RandomNumberGenerator.new()
 
 var FOOD_COLLECTED : int = 0
+var FOOD_AVAILABLE : int = 0
 var SCORE : int = 0
 var MULTIPLIER : int = 1
+var FAVORITE_MEAT = "none"
 
 var MAP_ARRAY = []
+var MAP_ARRAY_COPY = []
+
 const MAP_WIDTH = 32
 const MAP_HEIGHT = 23
 const PLAYGROUND_START = 1
@@ -23,60 +26,100 @@ const PLAYER_TILE = 4
 const START_TILE = 5
 var BLANK_TILES = []
 var START_TILES = [Vector2(13, 20), Vector2(12, 21), Vector2(13, 21), Vector2(14, 21)]
+var LAVA_TILES = []
 var FOOD_ITEMS = []
 var PLAYER_POS = []
+var PLAYER_AROUND = []
+var PLAYER_ALIFE = true
+
+# used to check surounding tiles of the player
+const AROUND_ME = [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, -1)]
+const AROUND_ME_LITE = [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]
 
 func _ready():
-	randomize()
-	MAP_ARRAY = set_map_array()
-	
-
-# only calld once at beginning. Sets MAP_ARRAY size
-func set_map_array():
-	var array = []
-	for column in MAP_WIDTH:
-		array.append([])
-		for row in MAP_HEIGHT:
-			array[column].append(FREE_TILE)
-			
-	return array
+	RNG.randomize()
 
 
-func set_start_tiles():
-	for tile in START_TILES:
-		MAP_ARRAY[tile[0]][tile[1]] = START_TILE
-	set_food_tiles()
+func copy_map_array():
+	MAP_ARRAY_COPY = MAP_ARRAY
 
 
-func set_food_tiles():
-	for column in MAP_WIDTH:
-		for row in MAP_HEIGHT:
-			if MAP_ARRAY[column][row] == FREE_TILE:
-				MAP_ARRAY[column][row] = FOOD_TILE
-	spawn_food()
+func reset_map_array():
+	MAP_ARRAY = MAP_ARRAY_COPY
 
-
-func spawn_food():
-	for column in MAP_WIDTH:
-		for row in MAP_HEIGHT:
-			if MAP_ARRAY[column][row] == FOOD_TILE:
-				var food_item = FOOD.instance()
-				food_item.position = Vector2(column * TILE_SIZE - ITEM_OFFSET, row * TILE_SIZE - ITEM_OFFSET)
-				
-				get_tree().get_root().get_node("Game/Playground/Food_Container").add_child(food_item)
 
 func random_lava_vector():
 	var random_x = RNG.randi_range(PLAYGROUND_START, PLAYGROUND_END_X)
 	var random_y = RNG.randi_range(PLAYGROUND_START, PLAYGROUND_END_Y)
+	var tile_type = get_tile_type(Vector2(random_x, random_y))
 	
-	while MAP_ARRAY[random_x][random_y] != FOOD_TILE \
-	and MAP_ARRAY[random_x][random_y] != LAVA_TILE:
+	while tile_type != "food":
 		random_x = RNG.randi_range(PLAYGROUND_START, PLAYGROUND_END_X)
 		random_y = RNG.randi_range(PLAYGROUND_START, PLAYGROUND_END_Y)
+		tile_type = get_tile_type(Vector2(random_x, random_y))
+		
 	return Vector2(random_x, random_y)
+
+
+func get_tile_type(grid_pos):
+	var type
+	if MAP_ARRAY[grid_pos[0]][grid_pos[1]] == FOOD_TILE:
+		type = "food"
+		return type
+	elif MAP_ARRAY[grid_pos[0]][grid_pos[1]] == WALL_TILE:
+		type = "wall"
+		return type
+	elif MAP_ARRAY[grid_pos[0]][grid_pos[1]] == LAVA_TILE:
+		type = "lava"
+		return type
 
 
 func get_grid_pos(pos):
 	var current_position = Vector2(int(pos[0] / 16), int(pos[1] / 16))
 	return current_position
 	
+
+# returns the grid vectors around the given position
+func check_tiles_around_me(pos):
+	var tile_array = []
+	
+	pos = get_grid_pos(pos)
+	
+	for tile in AROUND_ME:
+		var saver = Vector2(pos[0] + tile[0], pos[1] + tile[1])
+		tile_array.append(saver)
+	return tile_array
+
+# same as get_tiles_around_me but only returns 4 grid positions
+func check_tiles_around_me_lava(grid_pos):
+	var tile_array = []
+	
+	for tile in AROUND_ME_LITE:
+		var saver = Vector2(grid_pos[0] + tile[0], grid_pos[1] + tile[1])
+		tile_array.append(saver)
+	return tile_array
+
+
+func print_map_array():
+	var x_counter = MAP_WIDTH -1
+
+	while x_counter > 12:
+		print(MAP_ARRAY[x_counter])
+		x_counter -= 1
+
+
+func handle_meat_multiplier(meat):
+	if FAVORITE_MEAT == meat:
+		MULTIPLIER += 1
+
+
+func change_favorite_food():
+	if FAVORITE_MEAT == "none":
+		var dice = RNG.randi_range(1, 2)
+		FAVORITE_MEAT = "meat" + String(dice)
+	elif FAVORITE_MEAT == "meat1":
+		FAVORITE_MEAT = "meat2"
+		MULTIPLIER = 1
+	else:
+		FAVORITE_MEAT = "meat1"
+		MULTIPLIER = 1
