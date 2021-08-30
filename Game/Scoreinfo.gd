@@ -17,3 +17,4 @@ func _process(delta):
 func refresh_labels():
 	$Background/Score.text = String(Global.SCORE)
 	$Background/Collected.text = String(Global.FOOD_COLLECTED)
+	$Background/Multiplier.text = String(Global.MULTIPLIER)

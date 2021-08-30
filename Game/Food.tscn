@@ -18,13 +18,12 @@ animations = [ {
 } ]
 
 [sub_resource type="CapsuleShape2D" id=2]
-radius = 7.3251
+radius = 5.42741
 height = 0.0
 
 [node name="Food" type="Area2D" groups=[
 "food",
 ]]
-visible = false
 script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]

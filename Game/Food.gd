@@ -22,10 +22,13 @@ func _on_Area2D_area_entered(area):
 			collect_food()
 			self.visible = false
 
+
 func collect_food():
+	Global.handle_meat_multiplier($AnimatedSprite.animation)
 	Global.SCORE += VALUE * Global.MULTIPLIER
 	Global.FOOD_COLLECTED += 1
 	start_revisible_timer()
+
 
 # set variations of the sprite
 func set_design():
@@ -37,25 +40,30 @@ func set_design():
 	else:
 		$AnimatedSprite.play("meat2")
 
+
 func start_revisible_timer():
-	var dice = RNG.randi_range(60, 90)
+	var dice = RNG.randi_range(5, 20)
 	$RevisibleTimer.wait_time = dice
 	$RevisibleTimer.start()
 
+
 func _on_RevisibleTimer_timeout():
-	self.visible = true
-
-
-func _on_StartVisibility_timeout():
-	self.visible = true
+	if Global.PLAYER_ALIFE:
+		set_design()
+		self.visible = true
 
 
 func set_start():
-	var dice = RNG.randi_range(1, 60)
-	$StartVisibility.wait_time = dice
+	$StartVisibility.wait_time = 0.1
 	$StartVisibility.start()
+
 
 # Destroys food if on lava tile
 func lava_checker():
 	if Global.MAP_ARRAY[grid_position[0]][grid_position[1]] == Global.LAVA_TILE:
+		Global.FOOD_AVAILABLE -= 1
 		queue_free()
+
+
+func kill():
+	queue_free()
