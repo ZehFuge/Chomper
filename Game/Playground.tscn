@@ -300,14 +300,14 @@ tile_set = SubResource( 12 )
 cell_size = Vector2( 16, 16 )
 format = 1
 script = ExtResource( 1 )
-EXPAND_DELAY = 9
+EXPAND_DELAY = 9.0
 
 [node name="ExpandDelay" type="Timer" parent="LavaMap"]
-wait_time = 7.0
+wait_time = 3.0
 one_shot = true
 
 [node name="VulcanDelay" type="Timer" parent="LavaMap"]
-wait_time = 30.0
+wait_time = 22.0
 one_shot = true
 
 [node name="Food_Container" type="Control" parent="."]

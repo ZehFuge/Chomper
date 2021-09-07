@@ -45,8 +45,7 @@ func input_handler():
 		move_direction.x = 0
 	
 	if Input.is_action_just_pressed("function_tester"):
-		#Global.print_map_array()
-		pass
+		Global.functiontest()
 	
 	if Global.PLAYER_ALIFE:
 		handle_animation(move_direction)
@@ -82,5 +81,4 @@ func handle_animation(move_vector):
 
 func _on_Sprite_animation_finished():
 	if $Sprite.animation == "dying":
-		# replace queue_free() with score.tscn
 		queue_free()

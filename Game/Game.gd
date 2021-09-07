@@ -5,6 +5,7 @@ var GO_Screen = preload("res://Game/GameOver.tscn")
 
 func _ready():
 	reset_values()
+	Jukebox.menu_music()
 
 
 func _process(delta):
@@ -15,6 +16,7 @@ func _process(delta):
 func reset_values():
 	Global.SCORE = 0
 	Global.FOOD_COLLECTED = 0
+	Jukebox.mode = "game"
 
 
 func input_handler():

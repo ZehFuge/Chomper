@@ -1,5 +1,7 @@
 extends Area2D
 
+export var HURRY_BORDER = 175
+
 export var VALUE : int = 5
 var RNG = RandomNumberGenerator.new()
 var grid_position = Vector2.ZERO
@@ -9,9 +11,9 @@ func _ready():
 	RNG.randomize()
 	set_design()
 	grid_position = Global.get_grid_pos(global_position)
-	set_start()
 
 
+# warning-ignore:unused_argument
 func _process(delta):
 	lava_checker()
 
@@ -20,10 +22,11 @@ func _on_Area2D_area_entered(area):
 	if self.visible:
 		if area.is_in_group("player"):
 			collect_food()
-			self.visible = false
 
 
 func collect_food():
+	Jukebox.collect_sfx()
+	self.visible = false
 	Global.handle_meat_multiplier($AnimatedSprite.animation)
 	Global.SCORE += VALUE * Global.MULTIPLIER
 	Global.FOOD_COLLECTED += 1
@@ -51,18 +54,33 @@ func _on_RevisibleTimer_timeout():
 	if Global.PLAYER_ALIFE:
 		set_design()
 		self.visible = true
+		revisible_checker()
 
 
 func set_start():
-	$StartVisibility.wait_time = 0.1
+	$StartVisibility.wait_time = 1
 	$StartVisibility.start()
 
 
 # Destroys food if on lava tile
 func lava_checker():
-	if Global.MAP_ARRAY[grid_position[0]][grid_position[1]] == Global.LAVA_TILE:
+	var tile = Global.MAP_ARRAY[grid_position.x][grid_position.y]
+	
+	if tile == Global.LAVA_TILE:
 		Global.FOOD_AVAILABLE -= 1
+		if Global.FOOD_AVAILABLE <= HURRY_BORDER \
+		and Jukebox.mode != "hurry":
+			Jukebox.mode = "hurry"
+			Jukebox.end_game_music()
 		queue_free()
+
+
+# checks if food gets visible at player position to autocollect
+func revisible_checker():
+	var grid_pos_temp = Global.get_grid_pos(global_position)
+	
+	if grid_pos_temp == Global.PLAYER_POS:
+		collect_food()
 
 
 func kill():

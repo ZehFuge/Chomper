@@ -9,13 +9,14 @@ func _ready():
 
 func create_map_array():
 	Global.MAP_ARRAY = set_map_array()
+	Global.LAVA_ORIGIN_MAP = set_map_array()
 	set_walls_to_array()
 	set_start_tiles()
 	set_food_tiles()
 	spawn_food()
 
 
-# only calld once at beginning. Sets MAP_ARRAY size
+# only called once at beginning. Sets MAP_ARRAY size
 func set_map_array():
 	var array = []
 	for column in Global.MAP_WIDTH:
@@ -32,6 +33,7 @@ func set_walls_to_array():
 		Global.MAP_ARRAY[tile.x][tile.y] = Global.WALL_TILE
 
 
+# lava cant spawn at the start area
 func set_start_tiles():
 	for tile in Global.START_TILES:
 		Global.MAP_ARRAY[tile[0]][tile[1]] = Global.START_TILE
