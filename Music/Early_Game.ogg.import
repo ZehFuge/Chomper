@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Early_Game.ogg-25140b449cd248f5a60fefd518ae2754.oggstr"
+
+[deps]
+
+source_file="res://Music/Early_Game.ogg"
+dest_files=[ "res://.import/Early_Game.ogg-25140b449cd248f5a60fefd518ae2754.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

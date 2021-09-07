@@ -10,7 +10,6 @@ config_version=4
 
 _global_script_classes=[  ]
 _global_script_class_icons={
-
 }
 
 [application]
@@ -24,15 +23,15 @@ config/windows_native_icon="res://Game/Images/icon.ico"
 [autoload]
 
 Global="*res://Global.gd"
+Jukebox="*res://Jukebox.tscn"
 
 [display]
 
 window/size/width=640
 window/size/height=360
 window/size/resizable=false
-window/size/fullscreen=true
-window/size/test_width=640
-window/size/test_height=360
+window/size/test_width=1280
+window/size/test_height=720
 window/stretch/mode="2d"
 window/stretch/aspect="keep"
 

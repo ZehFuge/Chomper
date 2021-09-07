@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/Food_Collect.ogg-d7fc86e18e259f57b8839ec0c6230882.oggstr"
+
+[deps]
+
+source_file="res://SFX/Food_Collect.ogg"
+dest_files=[ "res://.import/Food_Collect.ogg-d7fc86e18e259f57b8839ec0c6230882.oggstr" ]
+
+[params]
+
+loop=false
+loop_offset=0

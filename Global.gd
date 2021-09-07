@@ -9,7 +9,8 @@ var MULTIPLIER : int = 1
 var FAVORITE_MEAT = "none"
 
 var MAP_ARRAY = []
-var MAP_ARRAY_COPY = []
+var LAVA_ORIGIN_MAP = []
+var LAVA_AGE_MAP = []
 
 const MAP_WIDTH = 32
 const MAP_HEIGHT = 23
@@ -36,16 +37,9 @@ var PLAYER_ALIFE = true
 const AROUND_ME = [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0), Vector2(-1, -1), Vector2(1, -1), Vector2(-1, 1), Vector2(1, -1)]
 const AROUND_ME_LITE = [Vector2(0, -1), Vector2(0, 1), Vector2(-1, 0), Vector2(1, 0)]
 
+
 func _ready():
 	RNG.randomize()
-
-
-func copy_map_array():
-	MAP_ARRAY_COPY = MAP_ARRAY
-
-
-func reset_map_array():
-	MAP_ARRAY = MAP_ARRAY_COPY
 
 
 func random_lava_vector():
@@ -100,12 +94,9 @@ func check_tiles_around_me_lava(grid_pos):
 	return tile_array
 
 
-func print_map_array():
-	var x_counter = MAP_WIDTH -1
-
-	while x_counter > 12:
-		print(MAP_ARRAY[x_counter])
-		x_counter -= 1
+func functiontest():
+	for column in LAVA_ORIGIN_MAP:
+		print(column)
 
 
 func handle_meat_multiplier(meat):
